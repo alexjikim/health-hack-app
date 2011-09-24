@@ -15,7 +15,7 @@ class Patient(db.Model):
     name = db.StringProperty()
     room = db.ReferenceProperty(reference_class=Room)
     doctor = db.ReferenceProperty(reference_class=Doctor)
-    
+        
 class Task(db.Model):
     name = db.StringProperty()
     description = db.StringProperty()

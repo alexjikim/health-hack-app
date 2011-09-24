@@ -11,7 +11,8 @@ import base64
 
 # local imports
 import model
-from persistence import get_tasks_for_patient
+from persistence import get_tasks_for_patient, get_all_patients
+
 
 
 from google.appengine.ext import db
@@ -104,6 +105,14 @@ class DummyDataSetup(webapp.RequestHandler):
         path = os.path.join(os.path.dirname(__file__), 'html/CreateNewTask.html')
         self.response.out.write(template.render(path, template_values))
 
+class GetAllTasksByPatientsHandler(webapp.RequestHandler):
+    def get(self):
+        patients = get_all_patients()
+        output = "\n".join([patient.name for patient in patients])
+        
+        self.response.out.write("Got all patients:")
+        self.response.out.write(output)
+        
 def main():
     application = webapp.WSGIApplication([('/myTasks', MyTasks),
                                           ('/myPatients', MyPatients),
@@ -112,8 +121,8 @@ def main():
     
                                           ('/dummyDataSetup', DummyDataSetup),
     
-    
-                                          ('/dummyHandler', JustAnotherHandler)
+                                          ('/dummyHandler', JustAnotherHandler),
+                                          ('/getAllTasks', GetAllTasksByPatientsHandler)
     
                                          ], debug=True)
     run_wsgi_app(application)
