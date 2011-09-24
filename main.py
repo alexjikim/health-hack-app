@@ -148,10 +148,14 @@ class DummyDataSetup(webapp.RequestHandler):
 
 class GetAllTasksByPatientsHandler(webapp.RequestHandler):
     def get(self):
+        output = "All Tasks By Patient:<br\>"
         patients = get_all_patients()
-        output = "\n".join([patient.name for patient in patients])
+        for patient in patients:
+            output += "\tPatient Name: %s<br/>" % patient.name
+            for task in patient.task_set:
+                output += "\t\t%s\tPriority: %s\tDeadline: %s<br/>" %\
+                        (task.name, task.priority, task.deadline)
         
-        self.response.out.write("Got all patients:")
         self.response.out.write(output)
         
 def main():
