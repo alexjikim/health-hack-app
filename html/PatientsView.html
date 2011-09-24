@@ -42,11 +42,11 @@
             <li data-icon="none" data-role="list-divider" role="heading">
               {{patient.name}}
             </li>
-            {% for open_task in tasks %}
+            {% for task in patient.task_set %}
             <li>
               <a href="/taskDetails?key={{task.key}}" data-transition="fade">
-                <h3>{{ open_task.title }}</h3>
-                <p>{{ open_task.patient }}</p>
+                <h3>{{ task.name }}</h3>
+                <p>{{ task.deadline }}</p>
               </a>              
             </li>
             {% endfor %}
