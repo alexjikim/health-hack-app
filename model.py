@@ -16,7 +16,7 @@ class Patient(db.Model):
     room = db.ReferenceProperty(reference_class=Room)
     doctor = db.ReferenceProperty(reference_class=Doctor)
     
-class Tasks(db.Model):
+class Task(db.Model):
     name = db.StringProperty()
     description = db.StringProperty()
     when_added = db.DateTimeProperty(auto_now_add=True)
