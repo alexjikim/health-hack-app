@@ -45,21 +45,21 @@ class JustAnotherHandler(webapp.RequestHandler):
 class MyTasks(webapp.RequestHandler):
     def get(self):
         
-        task = model.Task()
-        task.name = 'name'
-        task.description = 'description'
-        task.deadline = datetime.datetime.now()
-        task.priority = 1
-        #task.patient = 'description'
-        task.when_completed = datetime.datetime.now()
-        #task.completed_by = 'description'
-        #task.assigned_to = 'description'
+        q = db.GqlQuery("SELECT * FROM Task")
+        tasks = q.fetch(limit=50)
 
-        
+
+        open_tasks = []
+        closed_tasks = []
+        for task in tasks:
+            if task.when_completed:
+                closed_tasks.append(task)
+            else:
+                open_tasks.append(task)
 
         template_values = {}
-        template_values['open_tasks'] = []
-        template_values['closed_tasks'] = []
+        template_values['open_tasks'] = open_tasks
+        template_values['closed_tasks'] = closed_tasks
         path = os.path.join(os.path.dirname(__file__), 'html/TasksView.html')
         self.response.out.write(template.render(path, template_values))
 
@@ -117,6 +117,7 @@ class DummyDataSetup(webapp.RequestHandler):
         t1.priority = 1
         t1.patient = p1
         t1.assigned_to = d1
+        t1.put()
         
         t2 = model.Task()
         t2.name = 'Task 2'
@@ -125,6 +126,7 @@ class DummyDataSetup(webapp.RequestHandler):
         t2.priority = 1
         t2.patient = p1
         t2.assigned_to = d1
+        t2.put()
         
         t3 = model.Task()
         t3.name = 'Task 3'
@@ -133,6 +135,7 @@ class DummyDataSetup(webapp.RequestHandler):
         t3.priority = 1
         t3.patient = p2
         t3.assigned_to = d1
+        t3.put()
         
         t4 = model.Task()
         t4.name = 'Task 4'
@@ -141,7 +144,7 @@ class DummyDataSetup(webapp.RequestHandler):
         t4.priority = 1
         t4.patient = p2
         t4.assigned_to = d1
-
+        t4.put()
 
 class GetAllTasksByPatientsHandler(webapp.RequestHandler):
     def get(self):
