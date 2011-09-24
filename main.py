@@ -11,6 +11,8 @@ import base64
 
 # local imports
 import model
+from persistence import get_tasks_for_patient
+
 
 from google.appengine.ext import db
 from google.appengine.ext import webapp
