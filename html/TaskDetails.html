@@ -1,0 +1,72 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>SOME TITLE</title>
+ 
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+ 
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.css" />
+<script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.js"></script>
+
+</head>
+<body>
+
+
+    <div data-role="page" id="taskDetails"> 
+
+      <div data-role="header" data-position="fixed" data-id="myheader" data-back-btn-text="previous"> 
+        <h1>SOME TITLE</h1>
+      </div>
+
+      <div data-role="content">
+        <ul data-role="listview" data-split-theme="d" >
+            
+            
+          <!-- Create task button-->
+          <li data-icon="plus" data-theme="e">
+            <a href="/createNewTask" data-transition="fade">
+              <h3>Create Task</h3>
+            </a>
+          </li>
+
+            <li data-icon="none" data-role="list-divider" role="heading">
+              Open Tasks
+            </li>
+          
+          {% for open_task in open_tasks %}
+            <li>
+              <a href="/taskDetails?key={{open_task.key}}" data-transition="fade">
+                <h3>{{ open_task.name }}</h3>
+                <p>{{ open_task.deadline }}</p>
+              </a>              
+            </li>
+          {% endfor %}
+
+
+
+
+            <li data-icon="none" data-role="list-divider" role="heading">
+              Completed
+            </li>
+            
+          {% for closed_task in closed_tasks %}
+            <li>
+              <a href="/taskDetails?key={{closed_task.key}}" >
+                <h3>{{ closed_task.name }}</h3>
+                <p>{{ closed_task.deadline }}</p>
+              </a>
+            </li>
+          {% endfor %}
+
+
+
+
+        </ul>
+      </div>
+    </div>
+
+
+</body>
+</html>

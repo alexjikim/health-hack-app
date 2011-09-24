@@ -1,0 +1,62 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>SOME TITLE</title>
+ 
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+ 
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.css" />
+<script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.js"></script>
+
+</head>
+<body>
+
+
+    <div data-role="page" id="patientsView"> 
+
+      <div data-role="header" data-position="fixed" data-id="myheader"> 
+        <h1>SOME TITLE</h1>
+        
+        <div data-role="navbar">
+          <ul>
+            <li><a href="/myTasks" data-transition="fade" >My Tasks</a></li>
+            <li><a href="#" class="ui-btn-active">My Patients</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div data-role="content">
+        <ul data-role="listview" data-split-theme="d" >
+            
+            
+          <!-- Create task button-->
+          <li data-icon="plus" data-theme="e">
+            <a href="/createNewTask" data-transition="fade">
+              <h3>Create Task</h3>
+            </a>
+          </li>
+
+          {% for patient in patients %}
+            <li data-icon="none" data-role="list-divider" role="heading">
+              {{patient.name}}
+            </li>
+            {% for open_task in tasks %}
+            <li>
+              <a href="/taskDetails?key={{task.key}}" data-transition="fade">
+                <h3>{{ open_task.title }}</h3>
+                <p>{{ open_task.patient }}</p>
+              </a>              
+            </li>
+            {% endfor %}
+          {% endfor %}
+
+
+        </ul>
+      </div>
+    </div>
+
+
+</body>
+</html>
