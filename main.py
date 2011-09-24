@@ -11,6 +11,9 @@ import base64
 
 # local imports
 import model
+from persistence import get_tasks_for_patient, get_all_patients
+
+
 
 from google.appengine.ext import db
 from google.appengine.ext import webapp
@@ -159,6 +162,18 @@ class DummyDataSetup(webapp.RequestHandler):
         t4.when_completed = datetime.datetime.now()
         t4.put()
 
+class GetAllTasksByPatientsHandler(webapp.RequestHandler):
+    def get(self):
+        output = "All Tasks By Patient:<br\>"
+        patients = get_all_patients()
+        for patient in patients:
+            output += "\tPatient Name: %s<br/>" % patient.name
+            for task in patient.task_set:
+                output += "\t\t%s\tPriority: %s\tDeadline: %s<br/>" %\
+                        (task.name, task.priority, task.deadline)
+        
+        self.response.out.write(output)
+        
 def main():
     application = webapp.WSGIApplication([('/myTasks', MyTasks),
                                           ('/myPatients', MyPatients),
@@ -167,8 +182,8 @@ def main():
     
                                           ('/dummyDataSetup', DummyDataSetup),
     
-    
-                                          ('/dummyHandler', JustAnotherHandler)
+                                          ('/dummyHandler', JustAnotherHandler),
+                                          ('/getAllTasks', GetAllTasksByPatientsHandler)
     
                                          ], debug=True)
     run_wsgi_app(application)

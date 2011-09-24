@@ -14,6 +14,12 @@ def get_tasks_for_patient(patient):
     tasks = Task.gql("WHERE ANCESTOR IS :1 AND patient = :2 ")
     return tasks
 
+def get_all_patients():
+    patients = Patient.all()
+    return patients
+    
+    
+
     
     
     
