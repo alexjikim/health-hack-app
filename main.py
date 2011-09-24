@@ -85,22 +85,60 @@ class DummyDataSetup(webapp.RequestHandler):
         d1.name = "Doctor 1"
         d1.put()
         
-        d2 = model.Doctor()
-        d2.name = "Doctor 2"
-        d2.put()
-        
         r1 = model.Room()
         r1.name = "Room 1"
         r1.zone = "Zone 1"
         r1.put()
         
-        r1 = model.Room()
-        r1.name = "Room 1"
-        r1.zone = "Zone 1"
-        r1.put()
+        r2 = model.Room()
+        r2.name = "Room 2"
+        r2.zone = "Zone 2"
+        r2.put()
 
-        path = os.path.join(os.path.dirname(__file__), 'html/CreateNewTask.html')
-        self.response.out.write(template.render(path, template_values))
+        p1 = model.Patient()
+        p1.name = "Patient 1"
+        p1.room = r1
+        p1.doctor = d1
+        p1.put()
+
+        p2 = model.Patient()
+        p2.name = "Patient 2"
+        p2.room = r1
+        p2.doctor = d1
+        p2.put()
+        
+        t1 = model.Task()
+        t1.name = 'Task 1'
+        t1.description = 'Task 1 description'
+        t1.deadline = datetime.datetime.strptime("09/24/2011 10:30 PM", "%m/%d/%Y %I:%M %p")
+        t1.priority = 1
+        t1.patient = p1
+        t1.assigned_to = d1
+        
+        t2 = model.Task()
+        t2.name = 'Task 2'
+        t2.description = 'Task 2 description'
+        t2.deadline = datetime.datetime.strptime("09/24/2011 11:30 PM", "%m/%d/%Y %I:%M %p")
+        t2.priority = 1
+        t2.patient = p1
+        t2.assigned_to = d1
+        
+        t3 = model.Task()
+        t3.name = 'Task 3'
+        t3.description = 'Task 3 description'
+        t3.deadline = datetime.datetime.strptime("09/24/2011 10:30 PM", "%m/%d/%Y %I:%M %p")
+        t3.priority = 1
+        t3.patient = p2
+        t3.assigned_to = d1
+        
+        t4 = model.Task()
+        t4.name = 'Task 4'
+        t4.description = 'Task 4 description'
+        t4.deadline = datetime.datetime.strptime("09/24/2011 11:30 PM", "%m/%d/%Y %I:%M %p")
+        t4.priority = 1
+        t4.patient = p2
+        t4.assigned_to = d1
+
 
 def main():
     application = webapp.WSGIApplication([('/myTasks', MyTasks),
