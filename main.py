@@ -45,7 +45,6 @@ class MyTasks(webapp.RequestHandler):
         q = db.GqlQuery("SELECT * FROM Task")
         tasks = q.fetch(limit=50)
 
-
         open_tasks = []
         closed_tasks = []
         for task in tasks:
@@ -62,7 +61,22 @@ class MyTasks(webapp.RequestHandler):
 
 class MyPatients(webapp.RequestHandler):
     def get(self):
+        
+        q = db.GqlQuery("SELECT * FROM Task")
+        tasks = q.fetch(limit=50)
+        
+        params = {}
+        for task in tasks:
+            key = str(task.patient.key)
+            
+            if key in params:
+                params[key].append(task)
+            else:
+                params[key] = []
+                params[key].append(task)
+        
         template_values = {}
+        template_values['asdas'] = params
         path = os.path.join(os.path.dirname(__file__), 'html/PatientsView.html')
         self.response.out.write(template.render(path, template_values))
         
