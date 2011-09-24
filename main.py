@@ -144,6 +144,8 @@ class DummyDataSetup(webapp.RequestHandler):
         t4.priority = 1
         t4.patient = p2
         t4.assigned_to = d1
+        t4.completed_by = d1
+        t4.when_completed = datetime.datetime.now()
         t4.put()
 
 class GetAllTasksByPatientsHandler(webapp.RequestHandler):
