@@ -1,21 +1,31 @@
-#!/usr/bin/env python
-#
-# Copyright 2007 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+import cgi
+import datetime
+import urllib
+import urllib2
+import wsgiref.handlers
+import os
+import logging
+import time
+import re
+import base64
+
+# local imports
+import model
+
+from google.appengine.ext import db
 from google.appengine.ext import webapp
-from google.appengine.ext.webapp import util
+from google.appengine.ext.webapp.util import run_wsgi_app
+from google.appengine.ext.webapp import template
+from google.appengine.api import urlfetch
+from google.appengine.dist import use_library
+from google.appengine.api import images
+from google.appengine.api import mail
+
+from django.utils import simplejson as json
+
+use_library('django', '1.2')
+
+from gaesessions import get_current_session
 
 
 class MainHandler(webapp.RequestHandler):
@@ -23,11 +33,32 @@ class MainHandler(webapp.RequestHandler):
         self.response.out.write('Hello world!')
 
 
+
+class JustAnotherHandler(webapp.RequestHandler):
+    def get(self):
+        self.response.out.write('Hello world!')
+
+
+
+
+
+
+
+
+
 def main():
-    application = webapp.WSGIApplication([('/', MainHandler)],
-                                         debug=True)
-    util.run_wsgi_app(application)
+    application = webapp.WSGIApplication([('/', MainHandler),
+                                          ('/dummyHandler', JustAnotherHandler)
+    
+                                         ], debug=True)
+    run_wsgi_app(application)
+
+
 
 
 if __name__ == '__main__':
     main()
+
+
+
+
