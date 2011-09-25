@@ -48,7 +48,7 @@
             {% for task in patient.task_set %}
             <li>
               <a href="/taskDetails?key={{task.key}}" data-transition="fade">
-                <img src="/img/1.png"/>
+                <img src="/img/{{task.priority}}.png"/>
                 <h3>{{ task.name }}</h3>
                 <p>{{ task.deadline }}</p>
               </a>              
