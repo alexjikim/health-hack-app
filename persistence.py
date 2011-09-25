@@ -54,7 +54,7 @@ def get_tasks_for_patient(patient):
     return tasks
 
 def get_all_patients():
-    patients = Patient.all()
+    patients = Patient.all().fetch(limit=10000)
     for patient in patients:
         complete_patient_tasks(patient)
     return patients
