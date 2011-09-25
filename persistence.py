@@ -29,7 +29,7 @@ def complete_patient_tasks(patient):
     
 def get_tasks_for_patient(patient):
     tasks = Task.gql("WHERE patient = :patient ",
-            ancestor = task_key(), patient = patient)
+            patient = patient)
     return tasks
 
 def get_all_patients():
@@ -40,7 +40,7 @@ def get_all_patients():
     
 def get_patients_for_doctor(doctor):
     patients = Patient.gql("WHERE doctor = :doctor ",
-            ancestor = patient_key(), doctor = doctor)
+            doctor = doctor)
     for patient in patients:
         complete_patient_tasks(patient)
     return patients

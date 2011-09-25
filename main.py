@@ -80,7 +80,7 @@ class MyPatients(webapp.RequestHandler):
             self.redirect('/')
         doc_key = get_current_session()['current_doc_key']
         cur_doctor = db.get(db.Key(doc_key))
-        
+                
         patients = get_patients_for_doctor(cur_doctor)
         template_values = {}
         template_values['patients'] = patients
