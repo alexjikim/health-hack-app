@@ -42,7 +42,7 @@
           </li>
 
           {% for patient in patients %}
-            <li data-icon="none" data-role="list-divider" role="heading">
+            <li data-icon="none" data-role="list-divider" role="heading" onclick="showPatientDetails('{{patient.key}}')">
             {{patient.name}}  {% if show_doctor %} {{ patient.doctor.name }} {% endif %}
             </li>
             {% for task in patient.task_set %}
@@ -58,6 +58,14 @@
 
 
         </ul>
+        
+        <script>
+            function showPatientDetails(key){
+                window.location = '/patientDetails?patient=' + key;
+            }
+        </script>
+        
+        
       </div>
     </div>
 
