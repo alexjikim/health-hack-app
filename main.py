@@ -34,6 +34,11 @@ from gaesessions import get_current_session
 
 
 
+def get_current_doctor():
+    doc_name = get_current_session()['current_doc_name']
+    cur_doctor = persistence.get_doctor(doc_name)
+    return cur_doctor
+    
 class Login(webapp.RequestHandler):
     def get(self):
         path = os.path.join(os.path.dirname(__file__), 'html/Login.html')
@@ -53,8 +58,7 @@ class MyTasks(webapp.RequestHandler):
     def get(self):
         if not get_current_session().has_key('current_doc_name'):
             self.redirect('/')
-        doc_name = get_current_session()['current_doc_name']
-        cur_doctor = persistence.get_doctor(doc_name)
+        cur_doctor = get_current_doctor()
 
         logging.info(cur_doctor.pending_tasks)
 
@@ -67,8 +71,7 @@ class MyPatients(webapp.RequestHandler):
     def get(self):
         if not get_current_session().has_key('current_doc_name'):
             self.redirect('/')
-        doc_name = get_current_session()['current_doc_name']
-        cur_doctor = persistence.get_doctor(doc_name)
+        cur_doctor = get_current_doctor()
                 
         patients = persistence.get_patients_for_doctor(cur_doctor)
         template_values = {}
@@ -96,8 +99,7 @@ class CreateNewTask(webapp.RequestHandler):
     def post(self):
         if not get_current_session().has_key('current_doc_name'):
             self.redirect('/')
-        doc_name = get_current_session()['current_doc_name']
-        cur_doctor = get_doctor(doc_name)
+        cur_doctor = get_current_doctor()
 
         task_name = self.request.get('task-name')
         task_desc = self.request.get('task-desc')
@@ -287,10 +289,9 @@ class GetAllTasksForPatientHandler(webapp.RequestHandler):
         
 class CloseTaskHandler(webapp.RequestHandler):
     def post(self):
-        if not get_current_session().has_key('current_doc_key'):
+        if not get_current_session().has_key('current_doc_name'):
             self.redirect('/')
-        doc_key = get_current_session()['current_doc_key']
-        cur_doctor = db.get(db.Key(doc_key))
+        cur_doctor = get_current_doctor()
         task_key = self.request.get('task')
         task = model.Task.get_by_id(task_key)
         persistence.close_task(task, cur_doctor)
