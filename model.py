@@ -1,8 +1,3 @@
-import cgi
-import os
-import logging
-import Queue
-
 from google.appengine.ext import db
 
 class Doctor(db.Model):

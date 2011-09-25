@@ -1,23 +1,23 @@
 from datetime import datetime
 from model import Doctor, Room, Patient, Task
 from google.appengine.ext import db
-import Queue
 
 import logging
 
 
 def complete_doctor_tasks(doctor):
-    tasks = Queue.PriorityQueue()
+    tasks = []
         
     doctor.closed_tasks = []
     doctor.pending_tasks = []
     
     for patient in doctor.patient_set:
         for task in patient.task_set:
-            tasks.put(task)
+            tasks.append(task)
 
-    while not tasks.empty():
-        task = tasks.get()
+    tasks.sort()
+
+    for task in tasks:
         if task.when_completed:
             doctor.closed_tasks.append(task)
         else:
@@ -32,13 +32,13 @@ def get_doctor(doctor_name):
     return doctor
             
 def complete_patient_tasks(patient):
-    tasks = Queue.PriorityQueue()
+    tasks = []
     
     for task in patient.task_set:
-        tasks.put(task)
+        tasks.append(task)
+    tasks.sort()
     
-    while not tasks.empty():
-        task = tasks.get()
+    for task in tasks:
         if task.when_completed:
             patient.closed_tasks.append(task)
         else:
