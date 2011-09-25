@@ -2,7 +2,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>SOME TITLE</title>
+    <title>{{ title }}</title>
  
 <meta name="viewport" content="width=device-width, initial-scale=1"> 
  
@@ -20,7 +20,7 @@
     <div data-role="page" id="patientsView"> 
 
       <div data-role="header" data-position="fixed" data-id="myheader"> 
-        <h1>SOME TITLE</h1>
+          <h1>{{ title }}</h1>
         
         <div data-role="navbar">
           <ul>
@@ -43,9 +43,9 @@
 
           {% for patient in patients %}
             <li data-icon="none" data-role="list-divider" role="heading" onclick="showPatientDetails('{{patient.key}}')">
-              {{patient.name}}
+            {{patient.name}}  {% if show_doctor %} {{ patient.doctor.name }} {% endif %}
             </li>
-            {% for task in patient.task_set %}
+            {% for task in patient.pending_tasks %}
             <li>
               <a href="/taskDetails?key={{task.key}}" data-transition="fade">
                 <img src="/img/{{task.priority}}.png"/>

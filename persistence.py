@@ -1,23 +1,23 @@
 from datetime import datetime
 from model import Doctor, Room, Patient, Task
 from google.appengine.ext import db
-import Queue
 
 import logging
 
 
 def complete_doctor_tasks(doctor):
-    tasks = Queue.PriorityQueue()
+    tasks = []
         
     doctor.closed_tasks = []
     doctor.pending_tasks = []
     
     for patient in doctor.patient_set:
         for task in patient.task_set:
-            tasks.put(task)
+            tasks.append(task)
 
-    while not tasks.empty():
-        task = tasks.get()
+    tasks.sort()
+
+    for task in tasks:
         if task.when_completed:
             doctor.closed_tasks.append(task)
         else:
@@ -32,16 +32,17 @@ def get_doctor(doctor_name):
     return doctor
             
 def complete_patient_tasks(patient):
-    tasks = Queue.PriorityQueue()
+    tasks = []
     
     patient.closed_tasks = []
     patient.pending_tasks = []
     
     for task in patient.task_set:
-        tasks.put(task)
+        tasks.append(task)
+
+    tasks.sort()
     
-    while not tasks.empty():
-        task = tasks.get()
+    for task in tasks:
         if task.when_completed:
             patient.closed_tasks.append(task)
         else:
@@ -61,9 +62,12 @@ def get_all_patients():
     
 def get_patients_for_doctor(doctor):
     patients = Patient.gql("WHERE doctor = :doctor ",
-            doctor = doctor)
+            doctor = doctor).fetch(limit=100000)
     for patient in patients:
         complete_patient_tasks(patient)
+        logging.info("in loop, patient has %d pending tasks", len(patient.pending_tasks))
+    for patient in patients:
+        logging.info("out of loop, patient has %d pending tasks", len(patient.pending_tasks))
     return patients
     
 def handover_patients(from_doctor, to_doctor):
