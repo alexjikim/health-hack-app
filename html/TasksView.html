@@ -10,6 +10,9 @@
 <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
 <script src="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.js"></script>
 
+<link rel="stylesheet" href="/css/mobiscroll-1.5.min.css" />
+<script src="/javascript/mobiscroll-1.5.js"></script>
+
 </head>
 <body>
 
@@ -21,7 +24,8 @@
         <div data-role="navbar">
           <ul>
             <li><a href="#" class="ui-btn-active">My Tasks</a></li>
-            <li><a href="/myTasks" data-transition="fade">My Patients</a></li>
+            <li><a href="/myPatients" data-transition="fade">My Patients</a></li>
+            <li><a href="/patientDetails" data-transition="fade">Patient Details</a></li>
           </ul>
         </div>
       </div>
@@ -29,10 +33,7 @@
       <div data-role="content">
         <ul data-role="listview" data-split-theme="d" >
             
-            
-            
-            
-            
+
           <!-- Create task button-->
           <li data-icon="plus" data-theme="e">
             <a href="/createNewTask" data-transition="fade">
@@ -52,9 +53,6 @@
               </a>              
             </li>
           {% endfor %}
-
-
-
 
             <li data-icon="none" data-role="list-divider" role="heading">
               Completed

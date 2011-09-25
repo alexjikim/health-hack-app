@@ -10,6 +10,9 @@
 <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
 <script src="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.js"></script>
 
+<link rel="stylesheet" href="/css/mobiscroll-1.5.min.css" />
+<script src="/javascript/mobiscroll-1.5.js"></script>
+
 </head>
 <body>
 
@@ -23,13 +26,13 @@
           <ul>
             <li><a href="/myTasks" data-transition="fade" >My Tasks</a></li>
             <li><a href="#" class="ui-btn-active">My Patients</a></li>
+            <li><a href="/patientDetails" data-transition="fade">Patient Details</a></li>
           </ul>
         </div>
       </div>
 
       <div data-role="content">
         <ul data-role="listview" data-split-theme="d" >
-            
             
           <!-- Create task button-->
           <li data-icon="plus" data-theme="e">
@@ -45,6 +48,7 @@
             {% for task in patient.task_set %}
             <li>
               <a href="/taskDetails?key={{task.key}}" data-transition="fade">
+                <img src="/img/1.png"/>
                 <h3>{{ task.name }}</h3>
                 <p>{{ task.deadline }}</p>
               </a>              

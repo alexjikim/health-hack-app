@@ -1,0 +1,97 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>SOME TITLE</title>
+ 
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+ 
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.css" />
+<script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.js"></script>
+
+<link rel="stylesheet" href="/css/mobiscroll-1.5.min.css" />
+<script src="/javascript/mobiscroll-1.5.js"></script>
+
+</head>
+<body>
+
+
+    <div data-role="page" id="createNewTask" data-add-back-btn="true"> 
+
+      <div data-role="header" data-position="fixed" data-id="myheader" > 
+        <h1>Create Task</h1>
+      </div>
+
+      <div data-role="content">
+
+          <form action="/createNewTask" method="post" data-transition="fade">
+
+            <div data-role="fieldcontain">
+              <fieldset data-role="controlgroup" data-type="horizontal">
+                <legend>Task:</legend>
+                <input type="text" name="task-name" id="task-name" value="" />
+              </fieldset>
+            </div>
+            
+            
+            <div data-role="fieldcontain">
+              <fieldset data-role="controlgroup" data-type="horizontal">
+                <legend>Description:</legend>
+                <textarea type="text" name="task-desc" id="task-desc"></textarea>
+                </fieldset>
+            </div>
+
+            <div data-role="fieldcontain">
+              <fieldset data-role="controlgroup" data-type="horizontal">
+                <legend>Priority:</legend>
+                <input type="radio" name="priority" id="radio-choice-1" value="1" checked="checked" />
+                <label for="radio-choice-1">1</label>
+                
+                <input type="radio" name="priority" id="radio-choice-2" value="2"  />
+                <label for="radio-choice-2">2</label>
+                
+                <input type="radio" name="priority" id="radio-choice-3" value="3"  />
+                <label for="radio-choice-3">3</label>
+                
+                <input type="radio" name="priority" id="radio-choice-4" value="4"  />
+                <label for="radio-choice-4">4</label>
+                </fieldset>
+            </div>
+
+
+            <div data-role="fieldcontain">
+              <label for="patient" class="select">Patient:</label>
+              <select name="patient" id="patient"  data-native-menu="false">
+                {% for patient in patients %}
+                  <option value="{{patient.key}}">{{patient.name}}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div data-role="fieldcontain">
+              <label for="deadline">Deadline:</label>
+              <input type="text" name="deadline" id="deadline" class="mobiscroll" />
+            </div>
+            
+            
+
+
+            <input type="submit" value="Create" data-icon="arrow-r" data-iconpos="right"/>
+
+            <script>
+              $('#createNewTask').bind('pageshow', function() {
+                  $('#deadline').scroller({ theme: 'ios', preset: 'datetime'});
+                });
+
+            </script>
+
+
+          <form>
+
+      </div>
+    </div>
+
+
+</body>
+</html>

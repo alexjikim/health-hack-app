@@ -46,27 +46,35 @@ class JustAnotherHandler(webapp.RequestHandler):
 class MyTasks(webapp.RequestHandler):
     def get(self):
         
-        q = db.GqlQuery("SELECT * FROM Task")
-        tasks = q.fetch(limit=50)
+        #doctor_name = 'Doctor 1'
+        #doctor = model.Doctor.gql("WHERE name = :name ", name = doctor_name)[0]
+        
+        
+        
+        #task = doctor.assigned_tasks
+        
 
-        open_tasks = []
-        closed_tasks = []
-        for task in tasks:
-            if task.when_completed:
-                closed_tasks.append(task)
-            else:
-                open_tasks.append(task)
+        #open_tasks = []
+        #closed_tasks = []
+        #for task in tasks:
+        #    if task.when_completed:
+        #        closed_tasks.append(task)
+        #    else:
+        #        open_tasks.append(task)
 
         template_values = {}
-        template_values['open_tasks'] = open_tasks
-        template_values['closed_tasks'] = closed_tasks
+        #template_values['open_tasks'] = open_tasks
+        #template_values['closed_tasks'] = closed_tasks
         path = os.path.join(os.path.dirname(__file__), 'html/TasksView.html')
         self.response.out.write(template.render(path, template_values))
 
 class MyPatients(webapp.RequestHandler):
     def get(self):
+        doctor_name = 'Doctor 1'
+        doctor = model.Doctor.gql("WHERE name = :name ", name = doctor_name)[0]
+        patients = get_patients_for_doctor(doctor)
         template_values = {}
-        template_values['patients'] = get_all_patients()
+        template_values['patients'] = patients
         path = os.path.join(os.path.dirname(__file__), 'html/PatientsView.html')
         self.response.out.write(template.render(path, template_values))
         
@@ -83,7 +91,26 @@ class TaskDetails(webapp.RequestHandler):
 class CreateNewTask(webapp.RequestHandler):
     def get(self):
         template_values = {}
+        template_values['patients'] = get_all_patients()
         path = os.path.join(os.path.dirname(__file__), 'html/CreateNewTask.html')
+        self.response.out.write(template.render(path, template_values))
+
+    def post(self):
+
+        task_name = self.request.get('task-name')
+        task_desc = self.request.get('task-desc')
+        priority = self.request.get('priority')
+        patient_key = self.request.get('patient')
+        deadline_str = self.request.get('deadline')
+
+
+
+        self.redirect('/myTasks')
+
+class PatientDetails(webapp.RequestHandler):
+    def get(self):
+        template_values = {}
+        path = os.path.join(os.path.dirname(__file__), 'html/PatientDetails.html')
         self.response.out.write(template.render(path, template_values))
 
 class DummyDataSetup(webapp.RequestHandler):
@@ -199,6 +226,8 @@ def main():
                                           ('/myPatients', MyPatients),
                                           ('/taskDetails', TaskDetails),
                                           ('/createNewTask', CreateNewTask),
+                                          ('/patientDetails', PatientDetails),
+                                          
     
                                           ('/dummyDataSetup', DummyDataSetup),
     
