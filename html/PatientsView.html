@@ -24,8 +24,17 @@
         
         <div data-role="navbar">
           <ul>
+              {% if all_patients %}
+                <li><a href="#" class="ui-btn-active">All Patients</a></li>
+              {% else %}
+                <li><a href="/allPatients" data-transition="fade" >All Patients</a></li>
+              {% endif %}
             <li><a href="/myTasks" data-transition="fade" >My Tasks</a></li>
-            <li><a href="#" class="ui-btn-active">My Patients</a></li>
+              {% if all_patients %}
+                <li><a href="/myPatients" data-transition="fade">My Patients</a></li>
+              {% else %}
+                <li><a href="#" class="ui-btn-active">My Patients</a></li>
+              {% endif %}
             <li><a href="/patientDetails" data-transition="fade">Patient Details</a></li>
           </ul>
         </div>
