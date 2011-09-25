@@ -41,8 +41,14 @@ def get_current_doctor():
     
 class Login(webapp.RequestHandler):
     def get(self):
+                
+        doctors = model.Doctor.all().fetch(limit=10000)
+        
+        template_values = {}
+        template_values['doctors'] = doctors
+        
         path = os.path.join(os.path.dirname(__file__), 'html/Login.html')
-        self.response.out.write(template.render(path, {}))
+        self.response.out.write(template.render(path, template_values))
 
 
 class MyTasks(webapp.RequestHandler):
