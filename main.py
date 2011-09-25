@@ -308,44 +308,6 @@ class DummyDataSetup(webapp.RequestHandler):
         t8.when_completed = datetime.datetime.now()
         t8.put()
 
-def tasks_output(tasks):
-    output = ""
-    for task in tasks:
-        output += "\t\t%s\tPriority: %s\tDeadline: %s<br/>" %\
-                (task.name, task.priority, task.deadline)
-    return output
-    
-def tasks_output_by_patients(patients):
-    output = ""
-    for patient in patients:
-        output += "\tPatient Name: %s<br/>" % patient.name
-        output += tasks_output(patient.task_set)
-    return output
-    
-class GetAllTasksByPatientsHandler(webapp.RequestHandler):
-    def get(self):
-        output = "All Tasks By Patient:<br\>"
-        patients = persistence.get_all_patients()
-        output += tasks_output_by_patients(patients)
-        self.response.out.write(output)
-
-class GetAllTasksForDoctorHandler(webapp.RequestHandler):
-    def get(self):
-        doctor_name = self.request.get('doctor')
-        doctor = persistence.get_doctor(doctor_name)
-        patients = persistence.get_patients_for_doctor(doctor)
-        output = "All Tasks By Patient for Doctor %s:<br/>" % doctor.name
-        output += tasks_output_by_patients(patients)
-        self.response.out.write(output)
-
-class GetAllTasksForPatientHandler(webapp.RequestHandler):
-    def get(self):
-        patient_name = self.request.get('patient')
-        patient = model.Patient.gql("WHERE name = :name ", name = patient_name)[0]
-        tasks = persistence.get_tasks_for_patient(patient)
-        output = "All Tasks for Patient %s:<br/>" % patient.name
-        output += tasks_output(tasks)
-        self.response.out.write(output)
         
 class CloseTaskHandler(webapp.RequestHandler):
     def post(self):
@@ -367,16 +329,6 @@ def main():
                                           ('/createNewTask', CreateNewTask),
                                           ('/patientDetails', PatientDetails),
                                           ('/markTaskComplete', MarkTaskComplete),
-                                          
-                                          
-    
-                                          ('/dummyDataSetup', DummyDataSetup),
-    
-                                          ('/tasks/all', GetAllTasksByPatientsHandler),
-                                          ('/tasks/doctor', GetAllTasksForDoctorHandler),
-                                          ('/tasks/patient', GetAllTasksForPatientHandler),
-                                          ('/task/close', CloseTaskHandler),
-                                          
     
                                          ], debug=True)
     run_wsgi_app(application)
