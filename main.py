@@ -130,6 +130,10 @@ class DummyDataSetup(webapp.RequestHandler):
         d1.name = "Doctor 1"
         d1.put()
         
+        d2 = model.Doctor()
+        d2.name = "Doctor 2"
+        d2.put()
+        
         r1 = model.Room()
         r1.name = "Room 1"
         r1.zone = "Zone 1"
@@ -149,41 +153,85 @@ class DummyDataSetup(webapp.RequestHandler):
         p2 = model.Patient()
         p2.name = "Patient 2"
         p2.room = r1
-        p2.doctor = d1
+        p2.doctor = d2
         p2.put()
         
+        p3 = model.Patient()
+        p3.name = "Patient 3"
+        p3.room = r2
+        p3.doctor = d1
+        p3.put()
+        
         t1 = model.Task()
-        t1.name = 'Task 1'
-        t1.description = 'Task 1 description'
-        t1.deadline = datetime.datetime.strptime("09/24/2011 10:30 PM", "%m/%d/%Y %I:%M %p")
+        t1.name = 'Emergent task'
+        t1.description = 'Really important'
+        t1.deadline = datetime.datetime.strptime("09/25/2011 1:30 PM", "%m/%d/%Y %I:%M %p")
         t1.priority = 1
         t1.patient = p1
         t1.assigned_to = d1
         t1.put()
         
         t2 = model.Task()
-        t2.name = 'Task 2'
-        t2.description = 'Task 2 description'
-        t2.deadline = datetime.datetime.strptime("09/24/2011 11:30 PM", "%m/%d/%Y %I:%M %p")
+        t2.name = 'Change Wound Dressing'
+        t2.description = 'Change Bandage'
+        t2.deadline = datetime.datetime.strptime("09/25/2011 11:30 AM", "%m/%d/%Y %I:%M %p")
+        t2.priority = 4
+        t2.patient = p1
+        t2.assigned_to = d1
+        t2.put()
+        
+        t3 = model.Task()
+        t3.name = 'Pain Meds'
+        t3.description = 'This patient is in pain!'
+        t3.deadline = datetime.datetime.strptime("09/25/2011 10:30 AM", "%m/%d/%Y %I:%M %p")
+        t3.priority = 2
+        t3.patient = p2
+        t3.assigned_to = d1
+        t3.put()
+        
+        t4 = model.Task()
+        t4.name = 'Change Foley Catheter'
+        t4.description = 'Good Times'
+        t4.deadline = datetime.datetime.strptime("09/25/2011 5:30 PM", "%m/%d/%Y %I:%M %p")
+        t4.priority = 3
+        t4.patient = p2
+        t4.assigned_to = d1
+        t4.completed_by = d1
+        t4.when_completed = datetime.datetime.now()
+        t4.put()
+
+        t5 = model.Task()
+        t5.name = 'Chest X-Ray'
+        t5.description = 'TB or not TB?'
+        t5.deadline = datetime.datetime.strptime("09/25/2011 10:30 PM", "%m/%d/%Y %I:%M %p")
+        t5.priority = 2
+        t5.patient = p1
+        t5.assigned_to = d1
+        t5.put()
+        
+        t2 = model.Task()
+        t2.name = ''
+        t2.description = 'Task 6 description'
+        t2.deadline = datetime.datetime.strptime("09/25/2011 11:30 PM", "%m/%d/%Y %I:%M %p")
         t2.priority = 1
         t2.patient = p1
         t2.assigned_to = d1
         t2.put()
         
         t3 = model.Task()
-        t3.name = 'Task 3'
-        t3.description = 'Task 3 description'
-        t3.deadline = datetime.datetime.strptime("09/24/2011 10:30 PM", "%m/%d/%Y %I:%M %p")
-        t3.priority = 1
+        t3.name = 'Check Coagulation Status'
+        t3.description = 'Blood is thicker than water'
+        t3.deadline = datetime.datetime.strptime("09/25/2011 10:30 PM", "%m/%d/%Y %I:%M %p")
+        t3.priority = 3
         t3.patient = p2
         t3.assigned_to = d1
         t3.put()
         
         t4 = model.Task()
-        t4.name = 'Task 4'
-        t4.description = 'Task 4 description'
-        t4.deadline = datetime.datetime.strptime("09/24/2011 11:30 PM", "%m/%d/%Y %I:%M %p")
-        t4.priority = 1
+        t4.name = 'Change head position to 30deg'
+        t4.description = 'Carefully!'
+        t4.deadline = datetime.datetime.strptime("09/26/2011 11:30 PM", "%m/%d/%Y %I:%M %p")
+        t4.priority = 5
         t4.patient = p2
         t4.assigned_to = d1
         t4.completed_by = d1
