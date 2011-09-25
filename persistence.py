@@ -23,7 +23,6 @@ def complete_doctor_tasks(doctor):
         else:
             doctor.pending_tasks.append(task)
     
-    logging.info(doctor.pending_tasks)
     
     
 def get_doctor(doctor_name):
@@ -65,9 +64,6 @@ def get_patients_for_doctor(doctor):
             doctor = doctor).fetch(limit=100000)
     for patient in patients:
         complete_patient_tasks(patient)
-        logging.info("in loop, patient has %d pending tasks", len(patient.pending_tasks))
-    for patient in patients:
-        logging.info("out of loop, patient has %d pending tasks", len(patient.pending_tasks))
     return patients
     
 def handover_patients(from_doctor, to_doctor):
