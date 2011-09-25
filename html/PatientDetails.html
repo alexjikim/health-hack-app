@@ -32,24 +32,22 @@
       </div>
 
       <div data-role="content">
-        <ul data-role="listview" data-split-theme="d" >
+          <form action="/patientDetails" method="post" data-transition="fade">
 
-          {% for patient in patients %}
-            <li data-icon="none" data-role="list-divider" role="heading">
-              {{patient.name}}
-            </li>
-            {% for task in patient.task_set %}
-            <li>
-              <a href="/taskDetails?key={{task.key}}" data-transition="fade">
-                <h3>{{ task.name }}</h3>
-                <p>{{ task.deadline }}</p>
-              </a>              
-            </li>
-            {% endfor %}
-          {% endfor %}
+            <div data-role="fieldcontain">
+              <label for="patient" class="select">Patient:</label>
+              <select name="patient" id="patient"  data-native-menu="false">
+                {% for patient in patients %}
+                  <option value="{{patient.key}}">{{patient.name}}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <br/><br/>
+            <input type="submit" value="Search" data-icon="arrow-r" data-iconpos="right"/>
 
 
-        </ul>
+          <form>
       </div>
     </div>
 

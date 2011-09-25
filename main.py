@@ -120,8 +120,16 @@ class CreateNewTask(webapp.RequestHandler):
 class PatientDetails(webapp.RequestHandler):
     def get(self):
         template_values = {}
+        template_values['patients'] = get_all_patients()
+        
         path = os.path.join(os.path.dirname(__file__), 'html/PatientDetails.html')
         self.response.out.write(template.render(path, template_values))
+
+    def post(self):
+        self.request.get('')
+        
+        
+        
 
 class DummyDataSetup(webapp.RequestHandler):
     def get(self):
