@@ -123,7 +123,15 @@ class PatientDetails(webapp.RequestHandler):
     def get(self):
         template_values = {}
         template_values['patients'] = persistence.get_all_patients()
-        template_values['this_patient'] = None
+        
+        patient_key = self.request.get('patient')
+        if patient_key:
+            patient = db.get(db.Key(patient_key))
+            persistence.complete_patient_tasks(patient)
+            template_values['this_patient'] = patient
+        else:
+            template_values['this_patient'] = None
+        
         path = os.path.join(os.path.dirname(__file__), 'html/PatientDetails.html')
         self.response.out.write(template.render(path, template_values))
 
