@@ -139,6 +139,34 @@ class PatientDetails(webapp.RequestHandler):
         path = os.path.join(os.path.dirname(__file__), 'html/PatientDetails.html')
         self.response.out.write(template.render(path, template_values))
 
+class MarkTaskComplete(webapp.RequestHandler):
+    def get(self):
+        if not get_current_session().has_key('current_doc_name'):
+            self.redirect('/')
+        cur_doctor = get_current_doctor()
+        
+        task_key = self.request.get('key')
+        task = db.get(db.Key(task_key))
+        
+        task.when_completed = datetime.datetime.now()
+        task.completed_by = cur_doctor
+        task.put()
+
+        self.redirect('/myTasks')
+
+    def post(self):
+        patient_key = self.request.get('patient')
+        patient = db.get(db.Key(patient_key))
+        # yep...
+        persistence.complete_patient_tasks(patient)
+        
+        template_values = {}
+        template_values['patients'] = persistence.get_all_patients()
+        template_values['this_patient'] = patient
+        path = os.path.join(os.path.dirname(__file__), 'html/PatientDetails.html')
+        self.response.out.write(template.render(path, template_values))
+
+
 class DummyDataSetup(webapp.RequestHandler):
     def get(self):
         
@@ -311,6 +339,8 @@ def main():
                                           ('/taskDetails', TaskDetails),
                                           ('/createNewTask', CreateNewTask),
                                           ('/patientDetails', PatientDetails),
+                                          ('/markTaskComplete', MarkTaskComplete),
+                                          
                                           
     
                                           ('/dummyDataSetup', DummyDataSetup),
