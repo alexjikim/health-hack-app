@@ -211,29 +211,29 @@ class DummyDataSetup(webapp.RequestHandler):
         d2.put()
         
         r1 = model.Room()
-        r1.name = "Room 1"
-        r1.zone = "Zone 1"
+        r1.name = "Rm 17"
+        r1.zone = "West Ward"
         r1.put()
         
         r2 = model.Room()
-        r2.name = "Room 2"
-        r2.zone = "Zone 2"
+        r2.name = "Rm 25"
+        r2.zone = "East Ward"
         r2.put()
 
         p1 = model.Patient()
-        p1.name = "Patient 1"
+        p1.name = "Alice W."
         p1.room = r1
         p1.doctor = d1
         p1.put()
 
         p2 = model.Patient()
-        p2.name = "Patient 2"
+        p2.name = "Bob S."
         p2.room = r1
         p2.doctor = d2
         p2.put()
         
         p3 = model.Patient()
-        p3.name = "Patient 3"
+        p3.name = "Claire D."
         p3.room = r2
         p3.doctor = d1
         p3.put()
@@ -281,13 +281,13 @@ class DummyDataSetup(webapp.RequestHandler):
         t5.description = 'TB or not TB?'
         t5.deadline = datetime.datetime.strptime("09/25/2011 10:30 PM", "%m/%d/%Y %I:%M %p")
         t5.priority = 2
-        t5.patient = p3
+        t5.patient = p1
         t5.assigned_to = d1
         t5.put()
         
         t6 = model.Task()
         t6.name = 'Consult Nephrology'
-        t6.description = 'but not phrenology'
+        t6.description = 'Not phrenology'
         t6.deadline = datetime.datetime.strptime("09/25/2011 11:30 PM", "%m/%d/%Y %I:%M %p")
         t6.priority = 1
         t6.patient = p3
