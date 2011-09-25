@@ -32,24 +32,30 @@ use_library('django', '1.2')
 from gaesessions import get_current_session
 
 
-class MainHandler(webapp.RequestHandler):
+
+
+class Login(webapp.RequestHandler):
     def get(self):
-        self.response.out.write('Hello world!')
-
-
-
-class JustAnotherHandler(webapp.RequestHandler):
-    def get(self):
-        self.response.out.write('Hello world!')
+        path = os.path.join(os.path.dirname(__file__), 'html/Login.html')
+        self.response.out.write(template.render(path, {}))
+    
+    def post(self):
+        name = self.request.get('name')
+        doctors = model.Doctor.gql("WHERE name = :name ", name = name)
+        if doctors.count() < 1:
+            self.redirect('/')
+        else:
+            get_current_session()['current_doc_key'] = str(doctors[0].key())
+            self.redirect('/myTasks')
 
 
 class MyTasks(webapp.RequestHandler):
     def get(self):
-        
-        #doctor_name = 'Doctor 1'
-        #doctor = model.Doctor.gql("WHERE name = :name ", name = doctor_name)[0]
-        
-        
+        if not get_current_session().has_key('current_doc_key'):
+            self.redirect('/')
+        doc_key = get_current_session()['current_doc_key']
+        cur_doctor = db.get(db.Key(doc_key))
+
         
         #task = doctor.assigned_tasks
         
@@ -70,9 +76,12 @@ class MyTasks(webapp.RequestHandler):
 
 class MyPatients(webapp.RequestHandler):
     def get(self):
-        doctor_name = 'Doctor 1'
-        doctor = model.Doctor.gql("WHERE name = :name ", name = doctor_name)[0]
-        patients = get_patients_for_doctor(doctor)
+        if not get_current_session().has_key('current_doc_key'):
+            self.redirect('/')
+        doc_key = get_current_session()['current_doc_key']
+        cur_doctor = db.get(db.Key(doc_key))
+        
+        patients = get_patients_for_doctor(cur_doctor)
         template_values = {}
         template_values['patients'] = patients
         path = os.path.join(os.path.dirname(__file__), 'html/PatientsView.html')
@@ -96,14 +105,26 @@ class CreateNewTask(webapp.RequestHandler):
         self.response.out.write(template.render(path, template_values))
 
     def post(self):
+        if not get_current_session().has_key('current_doc_key'):
+            self.redirect('/')
+        doc_key = get_current_session()['current_doc_key']
+        cur_doctor = db.get(db.Key(doc_key))
 
         task_name = self.request.get('task-name')
         task_desc = self.request.get('task-desc')
-        priority = self.request.get('priority')
+        priority = int(self.request.get('priority'))
         patient_key = self.request.get('patient')
+        patient = db.get(db.Key(patient_key))
         deadline_str = self.request.get('deadline')
 
-
+        t = model.Task()
+        t.name = task_name
+        t.description = task_desc
+        t.deadline = datetime.datetime.strptime(deadline_str, "%m/%d/%Y %I:%M %p")
+        t.priority = priority
+        t.patient = patient
+        t.assigned_to = cur_doctor
+        t.put()
 
         self.redirect('/myTasks')
 
@@ -222,7 +243,8 @@ class GetAllTasksForPatientHandler(webapp.RequestHandler):
         
         
 def main():
-    application = webapp.WSGIApplication([('/myTasks', MyTasks),
+    application = webapp.WSGIApplication([('/', Login),
+                                          ('/myTasks', MyTasks),
                                           ('/myPatients', MyPatients),
                                           ('/taskDetails', TaskDetails),
                                           ('/createNewTask', CreateNewTask),
@@ -231,7 +253,6 @@ def main():
     
                                           ('/dummyDataSetup', DummyDataSetup),
     
-                                          ('/dummyHandler', JustAnotherHandler),
                                           ('/tasks/all', GetAllTasksByPatientsHandler),
                                           ('/tasks/doctor', GetAllTasksForDoctorHandler),
                                           ('/tasks/patient', GetAllTasksForPatientHandler),
