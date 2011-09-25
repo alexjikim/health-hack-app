@@ -71,7 +71,11 @@ class MyPatients(webapp.RequestHandler):
         
 class TaskDetails(webapp.RequestHandler):
     def get(self):
-        template_values = {}
+        keyString = self.request.get('key')
+        k = db.Key(keyString)
+        task = db.get(k)
+        
+        template_values = {'task' : task}
         path = os.path.join(os.path.dirname(__file__), 'html/TaskDetails.html')
         self.response.out.write(template.render(path, template_values))
         
