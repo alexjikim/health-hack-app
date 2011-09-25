@@ -45,41 +45,30 @@ class Login(webapp.RequestHandler):
         if doctors.count() < 1:
             self.redirect('/')
         else:
-            get_current_session()['current_doc_key'] = str(doctors[0].key())
+            get_current_session()['current_doc_name'] = doctors[0].name
             self.redirect('/myTasks')
 
 
 class MyTasks(webapp.RequestHandler):
     def get(self):
-        if not get_current_session().has_key('current_doc_key'):
+        if not get_current_session().has_key('current_doc_name'):
             self.redirect('/')
-        doc_key = get_current_session()['current_doc_key']
-        cur_doctor = db.get(db.Key(doc_key))
+        doc_name = get_current_session()['current_doc_name']
+        cur_doctor = get_doctor(doc_name)
 
-        
-        #task = doctor.assigned_tasks
-        
-
-        #open_tasks = []
-        #closed_tasks = []
-        #for task in tasks:
-        #    if task.when_completed:
-        #        closed_tasks.append(task)
-        #    else:
-        #        open_tasks.append(task)
+        logging.info(cur_doctor.pending_tasks)
 
         template_values = {}
-        #template_values['open_tasks'] = open_tasks
-        #template_values['closed_tasks'] = closed_tasks
+        template_values['doctor'] = cur_doctor
         path = os.path.join(os.path.dirname(__file__), 'html/TasksView.html')
         self.response.out.write(template.render(path, template_values))
 
 class MyPatients(webapp.RequestHandler):
     def get(self):
-        if not get_current_session().has_key('current_doc_key'):
+        if not get_current_session().has_key('current_doc_name'):
             self.redirect('/')
-        doc_key = get_current_session()['current_doc_key']
-        cur_doctor = db.get(db.Key(doc_key))
+        doc_name = get_current_session()['current_doc_name']
+        cur_doctor = get_doctor(doc_name)
                 
         patients = get_patients_for_doctor(cur_doctor)
         template_values = {}
@@ -105,10 +94,10 @@ class CreateNewTask(webapp.RequestHandler):
         self.response.out.write(template.render(path, template_values))
 
     def post(self):
-        if not get_current_session().has_key('current_doc_key'):
+        if not get_current_session().has_key('current_doc_name'):
             self.redirect('/')
-        doc_key = get_current_session()['current_doc_key']
-        cur_doctor = db.get(db.Key(doc_key))
+        doc_name = get_current_session()['current_doc_name']
+        cur_doctor = get_doctor(doc_name)
 
         task_name = self.request.get('task-name')
         task_desc = self.request.get('task-desc')

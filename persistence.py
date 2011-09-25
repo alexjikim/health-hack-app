@@ -1,18 +1,21 @@
 from model import Doctor, Room, Patient, Task
 from google.appengine.ext import db
 
+import logging
 
 
 def complete_doctor_tasks(doctor):
-    tasks = []
-    for patient in doctor.patient_set():
-        tasks.append(patient.task_set)
+    tasks = Queue.PriorityQueue()
+        
+    for patient in doctor.patient_set:
+        tasks.append(patient.task_set.get())    
     for task in tasks:
         if task.when_completed:
-            doctor.closed_tasks.put(task)
+            doctor.closed_tasks.append(task)
         else:
-            doctor.pending_tasks.put(task)
-            
+            doctor.pending_tasks.append(task)
+    
+    
 def get_doctor(doctor_name):
     doctor = Doctor.gql("WHERE name = :name ", name = doctor_name)[0]
     complete_doctor_tasks(doctor)
