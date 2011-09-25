@@ -7,8 +7,8 @@ from google.appengine.ext import db
 
 class Doctor(db.Model):
     name = db.StringProperty()
-    pending_tasks = Queue.PriorityQueue() # Tasks needed to be completed, of patients of the doctor
-    closed_tasks = Queue.PriorityQueue() # Tasks completed, of patients of the doctor
+    pending_tasks = [] # Tasks needed to be completed, of patients of the doctor
+    closed_tasks = [] # Tasks completed, of patients of the doctor
     
 class Room(db.Model):
     name = db.StringProperty()
@@ -18,8 +18,8 @@ class Patient(db.Model):
     name = db.StringProperty()
     room = db.ReferenceProperty(reference_class=Room)
     doctor = db.ReferenceProperty(reference_class=Doctor)
-    pending_tasks = Queue.PriorityQueue() # Tasks needed to be completed, of patients of the doctor
-    closed_tasks = Queue.PriorityQueue()  # Tasks completed, of patients of the doctor
+    pending_tasks = [] # Tasks needed to be completed, of patients of the doctor
+    closed_tasks = []  # Tasks completed, of patients of the doctor
         
 class Task(db.Model):
     name = db.StringProperty()
