@@ -184,7 +184,7 @@ class MarkTaskComplete(webapp.RequestHandler):
         task.completed_by = cur_doctor
         task.put()
 
-        self.redirect('/myTasks')
+        self.redirect('/taskDetails?key=%s' % db.Key(task_key))
 
     def post(self):
         patient_key = self.request.get('patient')
