@@ -17,7 +17,7 @@ def complete_doctor_tasks(doctor):
         tasks.append(patient.task_set)
     for task in tasks:
         if task.when_completed:
-            doctor.completed_tasks.put(task)
+            doctor.closed_tasks.put(task)
         else:
             doctor.pending_tasks.put(task)
             
@@ -30,7 +30,7 @@ def complete_patient_tasks(patient):
     tasks = []
     for task in tasks:
         if task.when_completed:
-            patient.completed_tasks.put(task)
+            patient.closed_tasks.put(task)
         else:
             patient.pending_tasks.put(task)
     
