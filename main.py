@@ -34,6 +34,11 @@ from gaesessions import get_current_session
 
 
 
+def get_current_doctor():
+    doc_name = get_current_session()['current_doc_name']
+    cur_doctor = persistence.get_doctor(doc_name)
+    return cur_doctor
+    
 class Login(webapp.RequestHandler):
     def get(self):
         path = os.path.join(os.path.dirname(__file__), 'html/Login.html')
@@ -44,8 +49,7 @@ class MyTasks(webapp.RequestHandler):
     def get(self):
         if not get_current_session().has_key('current_doc_name'):
             self.redirect('/')
-        doc_name = get_current_session()['current_doc_name']
-        cur_doctor = persistence.get_doctor(doc_name)
+        cur_doctor = get_current_doctor()
 
         logging.info(cur_doctor.pending_tasks)
 
@@ -67,8 +71,7 @@ class MyPatients(webapp.RequestHandler):
     def get(self):
         if not get_current_session().has_key('current_doc_name'):
             self.redirect('/')
-        doc_name = get_current_session()['current_doc_name']
-        cur_doctor = persistence.get_doctor(doc_name)
+        cur_doctor = get_current_doctor()
                 
         patients = persistence.get_patients_for_doctor(cur_doctor)
         template_values = {}
@@ -96,8 +99,7 @@ class CreateNewTask(webapp.RequestHandler):
     def post(self):
         if not get_current_session().has_key('current_doc_name'):
             self.redirect('/')
-        doc_name = get_current_session()['current_doc_name']
-        cur_doctor = get_doctor(doc_name)
+        cur_doctor = get_current_doctor()
 
         task_name = self.request.get('task-name')
         task_desc = self.request.get('task-desc')
@@ -223,34 +225,34 @@ class DummyDataSetup(webapp.RequestHandler):
         t5.assigned_to = d1
         t5.put()
         
-        t2 = model.Task()
-        t2.name = ''
-        t2.description = 'Task 6 description'
-        t2.deadline = datetime.datetime.strptime("09/25/2011 11:30 PM", "%m/%d/%Y %I:%M %p")
-        t2.priority = 1
-        t2.patient = p1
-        t2.assigned_to = d1
-        t2.put()
+        t6 = model.Task()
+        t6.name = 'Consult Nephrology'
+        t6.description = 'but not phrenology'
+        t6.deadline = datetime.datetime.strptime("09/25/2011 11:30 PM", "%m/%d/%Y %I:%M %p")
+        t6.priority = 1
+        t6.patient = p1
+        t6.assigned_to = d1
+        t6.put()
         
-        t3 = model.Task()
-        t3.name = 'Check Coagulation Status'
-        t3.description = 'Blood is thicker than water'
-        t3.deadline = datetime.datetime.strptime("09/25/2011 10:30 PM", "%m/%d/%Y %I:%M %p")
-        t3.priority = 3
-        t3.patient = p2
-        t3.assigned_to = d1
-        t3.put()
+        t7 = model.Task()
+        t7.name = 'Check Coagulation Status'
+        t7.description = 'Blood is thicker than water'
+        t7.deadline = datetime.datetime.strptime("09/25/2011 10:30 PM", "%m/%d/%Y %I:%M %p")
+        t7.priority = 3
+        t7.patient = p2
+        t7.assigned_to = d1
+        t7.put()
         
-        t4 = model.Task()
-        t4.name = 'Change head position to 30deg'
-        t4.description = 'Carefully!'
-        t4.deadline = datetime.datetime.strptime("09/26/2011 11:30 PM", "%m/%d/%Y %I:%M %p")
-        t4.priority = 5
-        t4.patient = p2
-        t4.assigned_to = d1
-        t4.completed_by = d1
-        t4.when_completed = datetime.datetime.now()
-        t4.put()
+        t8 = model.Task()
+        t8.name = 'Change head position to 30deg'
+        t8.description = 'Carefully!'
+        t8.deadline = datetime.datetime.strptime("09/26/2011 11:30 PM", "%m/%d/%Y %I:%M %p")
+        t8.priority = 5
+        t8.patient = p2
+        t8.assigned_to = d1
+        t8.completed_by = d1
+        t8.when_completed = datetime.datetime.now()
+        t8.put()
 
 def tasks_output(tasks):
     output = ""
@@ -293,10 +295,9 @@ class GetAllTasksForPatientHandler(webapp.RequestHandler):
         
 class CloseTaskHandler(webapp.RequestHandler):
     def post(self):
-        if not get_current_session().has_key('current_doc_key'):
+        if not get_current_session().has_key('current_doc_name'):
             self.redirect('/')
-        doc_key = get_current_session()['current_doc_key']
-        cur_doctor = db.get(db.Key(doc_key))
+        cur_doctor = get_current_doctor()
         task_key = self.request.get('task')
         task = model.Task.get_by_id(task_key)
         persistence.close_task(task, cur_doctor)
