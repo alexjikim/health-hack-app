@@ -138,16 +138,22 @@ class CreateNewTask(webapp.RequestHandler):
 class PatientDetails(webapp.RequestHandler):
     def get(self):
         template_values = {}
-        template_values['patients'] = get_all_patients()
-        
+        template_values['patients'] = persistence.get_all_patients()
+        template_values['this_patient'] = None
         path = os.path.join(os.path.dirname(__file__), 'html/PatientDetails.html')
         self.response.out.write(template.render(path, template_values))
 
     def post(self):
-        self.request.get('')
+        patient_key = self.request.get('patient')
+        patient = db.get(db.Key(patient_key))
+        # yep...
+        persistence.complete_patient_tasks(patient)
         
-        
-        
+        template_values = {}
+        template_values['patients'] = persistence.get_all_patients()
+        template_values['this_patient'] = patient
+        path = os.path.join(os.path.dirname(__file__), 'html/PatientDetails.html')
+        self.response.out.write(template.render(path, template_values))
 
 class DummyDataSetup(webapp.RequestHandler):
     def get(self):

@@ -24,30 +24,78 @@
         
         <div data-role="navbar">
           <ul>
-            <li><a href="/myTasks" data-transition="fade" >My Tasks</a></li>
-            <li><a href="/myPatients" data-transition="fade">My Patients</a></li>
+            <li><a href="/myTasks" data-transition="fade" rel="external">My Tasks</a></li>
+            <li><a href="/myPatients" data-transition="fade" rel="external">My Patients</a></li>
             <li><a href="#" class="ui-btn-active">Patient Details</a></li>
           </ul>
         </div>
       </div>
 
       <div data-role="content">
-          <form action="/patientDetails" method="post" data-transition="fade">
+          <form id="patientDetailsForm" action="/patientDetails" method="post" data-transition="fade" data-ajax="false">
 
             <div data-role="fieldcontain">
-              <label for="patient" class="select">Patient:</label>
-              <select name="patient" id="patient"  data-native-menu="false">
+              <!--<select name="patient" id="patient" data-native-menu="false">-->
+              <select name="patient" id="patient" data-native-menu="false">
+                
+                <option>Select Patient...</option>
                 {% for patient in patients %}
-                  <option value="{{patient.key}}">{{patient.name}}</option>
+                  {% if this_patient.key == patient.key %}
+                    <option value="{{patient.key}}" selected="true">{{patient.name}}</option>
+                  {% else %}
+                    <option value="{{patient.key}}">{{patient.name}}</option>
+                  {% endif %}
                 {% endfor %}
+                
+                
               </select>
             </div>
 
             <br/><br/>
-            <input type="submit" value="Search" data-icon="arrow-r" data-iconpos="right"/>
+            <!--<input type="submit" value="Search" data-icon="arrow-r" data-iconpos="right"/>-->
+
+          <script>
+          
+             $("#patient").change(function(e){
+                 $('#patientDetailsForm').submit();
+             });
+          
+          </script>
 
 
           <form>
+              
+          <ul data-role="listview" data-split-theme="d" >
+          
+              <li data-icon="none" data-role="list-divider" role="heading">
+                Open Tasks
+              </li>
+          
+            {% for pending_task in this_patient.pending_tasks %}
+              <li>
+                <a href="/taskDetails?key={{pending_task.key}}" data-transition="fade">
+                  <img src="/img/{{pending_task.priority}}.png"/>
+                  <h3>{{ pending_task.name }}</h3>
+                  <p>{{ pending_task.deadline }}</p>
+                </a>              
+              </li>
+            {% endfor %}
+          
+              <li data-icon="none" data-role="list-divider" role="heading">
+                Completed
+              </li>
+          
+            {% for closed_task in this_patient.closed_tasks %}
+              <li>
+                <a href="/taskDetails?key={{closed_task.key}}" >
+                  <img src="/img/{{closed_task.priority}}.png"/>
+                  <h3>{{ closed_task.name }}</h3>
+                  <p>{{ closed_task.deadline }}</p>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+              
       </div>
     </div>
 

@@ -34,6 +34,9 @@ def get_doctor(doctor_name):
 def complete_patient_tasks(patient):
     tasks = []
     
+    patient.closed_tasks = []
+    patient.pending_tasks = []
+    
     for task in patient.task_set:
         tasks.append(task)
     tasks.sort()
