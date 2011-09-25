@@ -11,7 +11,8 @@ import base64
 
 # local imports
 import model
-from persistence import get_tasks_for_patient, get_all_patients
+from persistence import get_tasks_for_patient, get_all_patients, get_patients_for_doctor
+    
 
 
 
@@ -152,17 +153,46 @@ class DummyDataSetup(webapp.RequestHandler):
         t4.when_completed = datetime.datetime.now()
         t4.put()
 
+def tasks_output(tasks):
+    output = ""
+    for task in tasks:
+        output += "\t\t%s\tPriority: %s\tDeadline: %s<br/>" %\
+                (task.name, task.priority, task.deadline)
+    return output
+    
+def tasks_output_by_patients(patients):
+    output = ""
+    for patient in patients:
+        output += "\tPatient Name: %s<br/>" % patient.name
+        output += tasks_output(patient.task_set)
+    return output
+    
 class GetAllTasksByPatientsHandler(webapp.RequestHandler):
     def get(self):
         output = "All Tasks By Patient:<br\>"
         patients = get_all_patients()
-        for patient in patients:
-            output += "\tPatient Name: %s<br/>" % patient.name
-            for task in patient.task_set:
-                output += "\t\t%s\tPriority: %s\tDeadline: %s<br/>" %\
-                        (task.name, task.priority, task.deadline)
-        
+        output += tasks_output_by_patients(patients)
         self.response.out.write(output)
+
+class GetAllTasksForDoctorHandler(webapp.RequestHandler):
+    def get(self):
+        doctor_name = self.request.get('doctor')
+        doctor = model.Doctor.gql("WHERE name = :name ", name = doctor_name)[0]
+        patients = get_patients_for_doctor(doctor)
+        output = "All Tasks By Patient for Doctor %s:<br/>" % doctor.name
+        output += tasks_output_by_patients(patients)
+        self.response.out.write(output)
+
+class GetAllTasksForPatientHandler(webapp.RequestHandler):
+    def get(self):
+        patient_name = self.request.get('patient')
+        patient = model.Patient.gql("WHERE name = :name ", name = patient_name)[0]
+        tasks = get_tasks_for_patient(patient)
+        output = "All Tasks for Patient %s:<br/>" % patient.name
+        output += tasks_output(tasks)
+        self.response.out.write(output)
+        
+        
         
 def main():
     application = webapp.WSGIApplication([('/myTasks', MyTasks),
@@ -173,7 +203,10 @@ def main():
                                           ('/dummyDataSetup', DummyDataSetup),
     
                                           ('/dummyHandler', JustAnotherHandler),
-                                          ('/getAllTasks', GetAllTasksByPatientsHandler)
+                                          ('/tasks/all', GetAllTasksByPatientsHandler),
+                                          ('/tasks/doctor', GetAllTasksForDoctorHandler),
+                                          ('/tasks/patient', GetAllTasksForPatientHandler),
+                                          
     
                                          ], debug=True)
     run_wsgi_app(application)
