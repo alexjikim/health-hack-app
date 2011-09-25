@@ -50,8 +50,8 @@
             <li>
               <a href="/taskDetails?key={{pending_task.key}}" data-transition="fade">
                 <img src="/img/{{pending_task.priority}}.png"/>
-                <h3>{{ pending_task.name }}</h3>
-                <p>{{ pending_task.deadline }}</p>
+                <h3>{{ pending_task.name }} ({{ pending_task.patient.name }} / {{ pending_task.patient.room.name }})</h3>
+                <p>Deadline: {{ pending_task.deadline }}</p>
               </a>              
             </li>
           {% endfor %}
@@ -64,8 +64,8 @@
             <li>
               <a href="/taskDetails?key={{closed_task.key}}" >
                 <img src="/img/{{closed_task.priority}}.png"/>
-                <h3>{{ closed_task.name }}</h3>
-                <p>{{ closed_task.deadline }}</p>
+                <h3>{{ closed_task.name }} ({{ closed_task.patient.name }} / {{ closed_task.patient.room.name }})</h3>
+                <p>Completed: {{ closed_task.when_completed }}</p>
               </a>
             </li>
           {% endfor %}

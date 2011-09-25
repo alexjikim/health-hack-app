@@ -41,9 +41,9 @@
                 <option>Select Patient...</option>
                 {% for patient in patients %}
                   {% if this_patient.key == patient.key %}
-                    <option value="{{patient.key}}" selected="true">{{patient.name}}</option>
+                    <option value="{{patient.key}}" selected="true">{{patient.name}} ({{patient.room.name}} / {{patient.room.zone}})</option>
                   {% else %}
-                    <option value="{{patient.key}}">{{patient.name}}</option>
+                    <option value="{{patient.key}}">{{patient.name}} ({{patient.room.name}} / {{patient.room.zone}})</option>
                   {% endif %}
                 {% endfor %}
                 
@@ -76,7 +76,7 @@
                 <a href="/taskDetails?key={{pending_task.key}}" data-transition="fade">
                   <img src="/img/{{pending_task.priority}}.png"/>
                   <h3>{{ pending_task.name }}</h3>
-                  <p>{{ pending_task.deadline }}</p>
+                  <p>Deadline: {{ pending_task.deadline }}</p>
                 </a>              
               </li>
             {% endfor %}
@@ -90,7 +90,7 @@
                 <a href="/taskDetails?key={{closed_task.key}}" >
                   <img src="/img/{{closed_task.priority}}.png"/>
                   <h3>{{ closed_task.name }}</h3>
-                  <p>{{ closed_task.deadline }}</p>
+                  <p>Completed: {{ closed_task.when_completed }}</p>
                 </a>
               </li>
             {% endfor %}
