@@ -50,7 +50,7 @@
               <a href="/taskDetails?key={{task.key}}" data-transition="fade">
                 <img src="/img/{{task.priority}}.png"/>
                 <h3>{{ task.name }}</h3>
-                <p>Deadline: {{ task.deadline }}</p>
+                <p>Due: {{ task.deadline|date:"m/d P" }}</p>
               </a>              
             </li>
             {% endfor %}
