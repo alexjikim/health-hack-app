@@ -77,6 +77,7 @@ class AllPatients(webapp.RequestHandler):
         template_values['patients'] = patients
         template_values['title'] = 'All Patients'
         template_values['show_doctor'] = True
+        template_values['all_patients'] = True
         path = os.path.join(os.path.dirname(__file__), 'html/PatientsView.html')
         self.response.out.write(template.render(path, template_values))
     
@@ -92,6 +93,7 @@ class MyPatients(webapp.RequestHandler):
         template_values['patients'] = patients
         template_values['title'] = 'My Patients'
         template_values['show_doctor'] = False
+        template_values['all_patients'] = False
         path = os.path.join(os.path.dirname(__file__), 'html/PatientsView.html')
         self.response.out.write(template.render(path, template_values))
         
