@@ -66,6 +66,20 @@ class MyTasks(webapp.RequestHandler):
             get_current_session()['current_doc_name'] = doctors[0].name
             self.redirect('/myTasks')
 
+class AllPatients(webapp.RequestHandler):
+    def get(self):
+        if not get_current_session().has_key('current_doc_name'):
+            self.redirect('/')
+        cur_doctor = get_current_doctor()
+                
+        patients = persistence.get_all_patients()
+        template_values = {}
+        template_values['patients'] = patients
+        template_values['title'] = 'All Patients'
+        template_values['show_doctor'] = True
+        path = os.path.join(os.path.dirname(__file__), 'html/PatientsView.html')
+        self.response.out.write(template.render(path, template_values))
+    
 
 class MyPatients(webapp.RequestHandler):
     def get(self):
@@ -76,6 +90,8 @@ class MyPatients(webapp.RequestHandler):
         patients = persistence.get_patients_for_doctor(cur_doctor)
         template_values = {}
         template_values['patients'] = patients
+        template_values['title'] = 'My Patients'
+        template_values['show_doctor'] = False
         path = os.path.join(os.path.dirname(__file__), 'html/PatientsView.html')
         self.response.out.write(template.render(path, template_values))
         
@@ -215,7 +231,7 @@ class DummyDataSetup(webapp.RequestHandler):
         t5.description = 'TB or not TB?'
         t5.deadline = datetime.datetime.strptime("09/25/2011 10:30 PM", "%m/%d/%Y %I:%M %p")
         t5.priority = 2
-        t5.patient = p1
+        t5.patient = p3
         t5.assigned_to = d1
         t5.put()
         
@@ -224,7 +240,7 @@ class DummyDataSetup(webapp.RequestHandler):
         t6.description = 'but not phrenology'
         t6.deadline = datetime.datetime.strptime("09/25/2011 11:30 PM", "%m/%d/%Y %I:%M %p")
         t6.priority = 1
-        t6.patient = p1
+        t6.patient = p3
         t6.assigned_to = d1
         t6.put()
         
@@ -233,7 +249,7 @@ class DummyDataSetup(webapp.RequestHandler):
         t7.description = 'Blood is thicker than water'
         t7.deadline = datetime.datetime.strptime("09/25/2011 10:30 PM", "%m/%d/%Y %I:%M %p")
         t7.priority = 3
-        t7.patient = p2
+        t7.patient = p3
         t7.assigned_to = d1
         t7.put()
         
@@ -302,6 +318,7 @@ def main():
     application = webapp.WSGIApplication([('/', Login),
                                           ('/myTasks', MyTasks),
                                           ('/myPatients', MyPatients),
+                                          ('/allPatients', AllPatients),
                                           ('/taskDetails', TaskDetails),
                                           ('/createNewTask', CreateNewTask),
                                           ('/patientDetails', PatientDetails),
