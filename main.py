@@ -11,7 +11,7 @@ import base64
 
 # local imports
 import model
-from persistence import get_tasks_for_patient, get_all_patients, get_patients_for_doctor
+from persistence import get_tasks_for_patient, get_all_patients, get_patients_for_doctor, get_doctor
     
 
 
@@ -173,7 +173,7 @@ class GetAllTasksByPatientsHandler(webapp.RequestHandler):
 class GetAllTasksForDoctorHandler(webapp.RequestHandler):
     def get(self):
         doctor_name = self.request.get('doctor')
-        doctor = model.Doctor.gql("WHERE name = :name ", name = doctor_name)[0]
+        doctor = get_doctor(doctor_name)
         patients = get_patients_for_doctor(doctor)
         output = "All Tasks By Patient for Doctor %s:<br/>" % doctor.name
         output += tasks_output_by_patients(patients)
