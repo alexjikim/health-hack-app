@@ -26,8 +26,11 @@ def complete_doctor_tasks(doctor):
     
     
 def get_doctor(doctor_name):
-    doctor = Doctor.gql("WHERE name = :name ", name = doctor_name)[0]
-    complete_doctor_tasks(doctor)
+    try:
+        doctor = Doctor.gql("WHERE name = :name ", name = doctor_name)[0]
+        complete_doctor_tasks(doctor)
+    except IndexError:
+        doctor = None
     return doctor
             
 def complete_patient_tasks(patient):

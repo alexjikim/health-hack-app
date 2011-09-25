@@ -57,8 +57,6 @@ class MyTasks(webapp.RequestHandler):
             self.redirect('/')
         cur_doctor = get_current_doctor()
 
-        logging.info(cur_doctor.pending_tasks)
-
         template_values = {}
         template_values['doctor'] = cur_doctor
         path = os.path.join(os.path.dirname(__file__), 'html/TasksView.html')
