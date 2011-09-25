@@ -25,7 +25,6 @@
 
       <div data-role="content">
 
-
           <h4>{{ task.name }} ({{ task.patient.name }} / {{ task.patient.room.name }})</h4>
                     
           Description: {{ task.description }}<br/><br/>
@@ -38,8 +37,25 @@
             Completed by: {{ task.completed_by.name }}<br/><br/>
           
           {% else %}
-            <a data-role="button" href="/markTaskComplete?key={{task.key}}">Mark as completed</a>
+            <!-- <a data-role="button" href="/markTaskComplete?key={{task.key}}">Mark as completed</a> -->
+            <a id="completedButton" href="#" data-role="button" onclick="markAsComplete()">Mark as completed</a>
+            <h4 id="completedText" style="display:none"><center>Completed</center></h4>
+            
+            <script>
+              function markAsComplete(){
+                  $.ajax({
+                    url: '/markTaskComplete?key={{task.key}}',
+                    data: {},
+                    success: function(resp){
+                      document.getElementById('completedButton').style.display = 'none';
+                      document.getElementById('completedText').style.display = '';
+                    },
+                    dataType: 'text'
+                  });
+              }
+            </script>
           {% endif %}
+
 
 
       </div>
