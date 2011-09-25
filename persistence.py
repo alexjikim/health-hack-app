@@ -5,8 +5,8 @@ from google.appengine.ext import db
 
 def complete_doctor_tasks(doctor):
     tasks = []
-    for patient in doctor.patient_set():
-        tasks.append(patient.task_set)
+    for patient in doctor.patient_set:
+        tasks.extend(patient.task_set)
     for task in tasks:
         if task.when_completed:
             doctor.closed_tasks.put(task)
@@ -19,8 +19,7 @@ def get_doctor(doctor_name):
     return doctor
             
 def complete_patient_tasks(patient):
-    tasks = []
-    for task in tasks:
+    for task in patient.task_set:
         if task.when_completed:
             patient.closed_tasks.put(task)
         else:
@@ -29,7 +28,7 @@ def complete_patient_tasks(patient):
     
 def get_tasks_for_patient(patient):
     tasks = Task.gql("WHERE patient = :patient ",
-            ancestor = task_key(), patient = patient)
+            patient = patient)
     return tasks
 
 def get_all_patients():
@@ -40,7 +39,7 @@ def get_all_patients():
     
 def get_patients_for_doctor(doctor):
     patients = Patient.gql("WHERE doctor = :doctor ",
-            ancestor = patient_key(), doctor = doctor)
+            doctor = doctor)
     for patient in patients:
         complete_patient_tasks(patient)
     return patients
