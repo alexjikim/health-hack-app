@@ -38,15 +38,6 @@ class Login(webapp.RequestHandler):
     def get(self):
         path = os.path.join(os.path.dirname(__file__), 'html/Login.html')
         self.response.out.write(template.render(path, {}))
-    
-    def post(self):
-        name = self.request.get('name')
-        doctors = model.Doctor.gql("WHERE name = :name ", name = name)
-        if doctors.count() < 1:
-            self.redirect('/')
-        else:
-            get_current_session()['current_doc_name'] = doctors[0].name
-            self.redirect('/myTasks')
 
 
 class MyTasks(webapp.RequestHandler):
@@ -62,6 +53,15 @@ class MyTasks(webapp.RequestHandler):
         template_values['doctor'] = cur_doctor
         path = os.path.join(os.path.dirname(__file__), 'html/TasksView.html')
         self.response.out.write(template.render(path, template_values))
+    def post(self):
+        name = self.request.get('name')
+        doctors = model.Doctor.gql("WHERE name = :name ", name = name)
+        if doctors.count() < 1:
+            self.redirect('/')
+        else:
+            get_current_session()['current_doc_name'] = doctors[0].name
+            self.redirect('/myTasks')
+
 
 class MyPatients(webapp.RequestHandler):
     def get(self):
