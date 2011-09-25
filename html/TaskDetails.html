@@ -26,10 +26,8 @@
       <div data-role="content">
 
 
-          <h4>{{ task.name }}</h4>
-          
-          Patient: {{ task.patient.name }}<br/><br/>
-          
+          <h4>{{ task.name }} ({{ task.patient.name }} / {{ task.patient.room.name }})</h4>
+                    
           Description: {{ task.description }}<br/><br/>
           
           Deadline: {{ task.deadline }}<br/><br/>
@@ -38,7 +36,6 @@
           
             Completed: {{ task.when_completed }}<br/><br/>
             Completed by: {{ task.completed_by.name }}<br/><br/>
-          
           
           {% else %}
             <a data-role="button" href="/markTaskComplete?key={{task.key}}">Mark as completed</a>
