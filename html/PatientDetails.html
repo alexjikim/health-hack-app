@@ -1,0 +1,58 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>SOME TITLE</title>
+ 
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+ 
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.css" />
+<script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.js"></script>
+
+<link rel="stylesheet" href="/css/mobiscroll-1.5.min.css" />
+<script src="/javascript/mobiscroll-1.5.js"></script>
+
+</head>
+<body>
+
+
+    <div data-role="page" id="patientDetails"> 
+
+      <div data-role="header" data-position="fixed" data-id="myheader"> 
+        <h1>SOME TITLE</h1>
+        
+        <div data-role="navbar">
+          <ul>
+            <li><a href="/myTasks" data-transition="fade" >My Tasks</a></li>
+            <li><a href="/myPatients" data-transition="fade">My Patients</a></li>
+            <li><a href="#" class="ui-btn-active">Patient Details</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div data-role="content">
+        <ul data-role="listview" data-split-theme="d" >
+
+          {% for patient in patients %}
+            <li data-icon="none" data-role="list-divider" role="heading">
+              {{patient.name}}
+            </li>
+            {% for task in patient.task_set %}
+            <li>
+              <a href="/taskDetails?key={{task.key}}" data-transition="fade">
+                <h3>{{ task.name }}</h3>
+                <p>{{ task.deadline }}</p>
+              </a>              
+            </li>
+            {% endfor %}
+          {% endfor %}
+
+
+        </ul>
+      </div>
+    </div>
+
+
+</body>
+</html>
