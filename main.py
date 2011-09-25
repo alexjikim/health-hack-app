@@ -11,7 +11,7 @@ import base64
 
 # local imports
 import model
-from persistence import get_tasks_for_patient, get_all_patients, get_patients_for_doctor, get_doctor
+import persistence
     
 
 
@@ -54,7 +54,7 @@ class MyTasks(webapp.RequestHandler):
         if not get_current_session().has_key('current_doc_name'):
             self.redirect('/')
         doc_name = get_current_session()['current_doc_name']
-        cur_doctor = get_doctor(doc_name)
+        cur_doctor = persistence.get_doctor(doc_name)
 
         logging.info(cur_doctor.pending_tasks)
 
@@ -68,9 +68,9 @@ class MyPatients(webapp.RequestHandler):
         if not get_current_session().has_key('current_doc_name'):
             self.redirect('/')
         doc_name = get_current_session()['current_doc_name']
-        cur_doctor = get_doctor(doc_name)
+        cur_doctor = persistence.get_doctor(doc_name)
                 
-        patients = get_patients_for_doctor(cur_doctor)
+        patients = persistence.get_patients_for_doctor(cur_doctor)
         template_values = {}
         template_values['patients'] = patients
         path = os.path.join(os.path.dirname(__file__), 'html/PatientsView.html')
@@ -89,7 +89,7 @@ class TaskDetails(webapp.RequestHandler):
 class CreateNewTask(webapp.RequestHandler):
     def get(self):
         template_values = {}
-        template_values['patients'] = get_all_patients()
+        template_values['patients'] = persistence.get_all_patients()
         path = os.path.join(os.path.dirname(__file__), 'html/CreateNewTask.html')
         self.response.out.write(template.render(path, template_values))
 
@@ -263,15 +263,15 @@ def tasks_output_by_patients(patients):
 class GetAllTasksByPatientsHandler(webapp.RequestHandler):
     def get(self):
         output = "All Tasks By Patient:<br\>"
-        patients = get_all_patients()
+        patients = persistence.get_all_patients()
         output += tasks_output_by_patients(patients)
         self.response.out.write(output)
 
 class GetAllTasksForDoctorHandler(webapp.RequestHandler):
     def get(self):
         doctor_name = self.request.get('doctor')
-        doctor = get_doctor(doctor_name)
-        patients = get_patients_for_doctor(doctor)
+        doctor = persistence.get_doctor(doctor_name)
+        patients = persistence.get_patients_for_doctor(doctor)
         output = "All Tasks By Patient for Doctor %s:<br/>" % doctor.name
         output += tasks_output_by_patients(patients)
         self.response.out.write(output)
@@ -280,10 +280,20 @@ class GetAllTasksForPatientHandler(webapp.RequestHandler):
     def get(self):
         patient_name = self.request.get('patient')
         patient = model.Patient.gql("WHERE name = :name ", name = patient_name)[0]
-        tasks = get_tasks_for_patient(patient)
+        tasks = persistence.get_tasks_for_patient(patient)
         output = "All Tasks for Patient %s:<br/>" % patient.name
         output += tasks_output(tasks)
         self.response.out.write(output)
+        
+class CloseTaskHandler(webapp.RequestHandler):
+    def post(self):
+        if not get_current_session().has_key('current_doc_key'):
+            self.redirect('/')
+        doc_key = get_current_session()['current_doc_key']
+        cur_doctor = db.get(db.Key(doc_key))
+        task_key = self.request.get('task')
+        task = model.Task.get_by_id(task_key)
+        persistence.close_task(task, cur_doctor)
         
         
         
@@ -301,6 +311,7 @@ def main():
                                           ('/tasks/all', GetAllTasksByPatientsHandler),
                                           ('/tasks/doctor', GetAllTasksForDoctorHandler),
                                           ('/tasks/patient', GetAllTasksForPatientHandler),
+                                          ('/task/close', CloseTaskHandler),
                                           
     
                                          ], debug=True)
@@ -311,6 +322,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 

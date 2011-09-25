@@ -1,3 +1,4 @@
+from datetime import datetime
 from model import Doctor, Room, Patient, Task
 from google.appengine.ext import db
 import Queue
@@ -67,6 +68,11 @@ def handover_patients(from_doctor, to_doctor):
     for patient in patients:
         patient.doctor = to_doctor
         patient.put()
+    
+def close_task(task, doctor):
+    task.when_completed = datetime.now()
+    task.completed_by = doctor
+    task.put()
     
 
     
