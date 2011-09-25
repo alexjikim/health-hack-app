@@ -318,6 +318,7 @@ def main():
                                           ('/createNewTask', CreateNewTask),
                                           ('/patientDetails', PatientDetails),
                                           ('/markTaskComplete', MarkTaskComplete),
+                                          ('/dummyDataSetup', DummyDataSetup),
     
                                          ], debug=True)
     run_wsgi_app(application)
